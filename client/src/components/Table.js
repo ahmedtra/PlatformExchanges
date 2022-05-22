@@ -93,11 +93,12 @@ console.log(Math.min(...mk[7]))
                   <>
                     <th rowSpan={2}>{coin}</th>
                     <th>Ask</th>
-                    <th>5255</th>
+                    <th></th>
                     <th>{Math.min(...mk[keys])}</th>
 
                     {valueCoins.map((ech) => (
-                      <th>
+                      <th className={ech[coin] && Object.keys(ech[coin]).length !== 0
+                        && Number.parseFloat(ech[coin].ask)===Math.min(...mk[keys])?"active":""}>
                         {ech[coin] && Object.keys(ech[coin]).length !== 0
                           ? Number.parseFloat(ech[coin].ask).toFixed(6)
                           : "-"}{" "}
@@ -115,7 +116,8 @@ console.log(Math.min(...mk[7]))
 
                     <th>{Math.max(...mk[keys])}</th>
                     {valueCoins.map((ech) => (
-                      <th>
+                      <th className={ech[coin] && Object.keys(ech[coin]).length !== 0
+                        && Number.parseFloat(ech[coin].ask)===Math.max(...mk[keys])?"active":""}>
                         {ech[coin] && Object.keys(ech[coin]).length !== 0
                           ? Number.parseFloat(ech[coin].bid).toFixed(7)
                           : "-"}{" "}
@@ -133,13 +135,13 @@ console.log(Math.min(...mk[7]))
                   <>
                     <th rowSpan={2}>{coin}</th>
                     <th>Ask</th>
-                    <th>5255</th>
-                    <th>{Math.min(...mk[key])}</th>
+                    <th></th>
+                    <th>{(Math.min(...mk[key]))*(1+fees[key]/100)}</th>
 
                     {valueCoins.map((ech,key) => (
-                      <th>
+                      <th className={ech[coin] &&(ech[coin].ask)===Math.min(...mk[key])?"active":""}>
                         {ech[coin] && Object.keys(ech[coin]).length !== 0
-                          ?Number.parseFloat( ((ech[coin].ask)*(1+fees[key]/100))).toFixed(7)
+                          ?Number.parseFloat( ((ech[coin].ask)*(1+fees[key]/100))).toFixed(6)
                           : "-"}{" "}
                       </th>
                     ))}
@@ -151,13 +153,13 @@ console.log(Math.min(...mk[7]))
                 {
                   <>
                     <th>Bid</th>
-                    <th>dddd</th>
+                    <th></th>
 
-                    <th>{Math.min(...mk[key])}</th>
+                    <th>{Number.parseFloat((Math.max(...mk[key]))*(1-fees[key]/100)).toFixed(6)}</th>
                     {valueCoins.map((ech,key) => (
-                      <th>
+                      <th className={ech[coin] && (ech[coin].bid)===(Math.max(...mk[key]))*(1-fees[key]/100)?"active":""}>
                         {ech[coin] && Object.keys(ech[coin]).length !== 0
-                          ?Number.parseFloat((ech[coin].bid)*(1-fees[key]/100)).toFixed(7)
+                          ?Number.parseFloat((ech[coin].bid)*(1-fees[key]/100)).toFixed(6)
                           : "-"}{" "}
                       </th>
                     ))}
