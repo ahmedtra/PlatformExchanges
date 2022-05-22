@@ -46,7 +46,8 @@ const Tables = () => {
       setkeyExchangers(Object.keys(exchangers));
     }
   });
-let ar=[]
+let ask=[]
+let bid=[]
   const includeFees = () => {
     setincludeFees(false);
   };
@@ -55,21 +56,26 @@ Coins.map((coin) =>
   valueCoins.map((ech) => (
   
  ech[coin] && Object.keys(ech[coin]).length !== 0
-        ? ar.push( ech[coin].ask)
+        ? ask.push( ech[coin].ask) 
+          && bid.push(ech[coin].bid)
         : ""
       ))
-ar.push("/")
+ask.push("/")
+bid.push("/")
 })
-var vals=[]
-
-vals=(ar.toString()).split("/");
+let  minAsk=[]
+let maxBid =[]
+minAsk=(ask.toString()).split("/");
+maxBid=(bid.toString()).split("/");
+let mks=[]
 let mk=[]
 for (var i=0;i<Coins.length;i++)
 {
-  mk[i]= (Array(vals[i])[0]).split(',').filter(e=>e)
+  mk[i]= (Array(minAsk[i])[0]).split(',').filter(e=>e)
   mk[i]= mk[i].map(e=>Number(e))
+  mks[i]= (Array(maxBid[i])[0]).split(',').filter(e=>e)
+  mks[i]= mks[i].map(e=>Number(e))
 }
-console.log(Math.min(...mk[7]))
   return (
     <div className="container">
       <table className="styled-table" border={1}>
@@ -78,7 +84,6 @@ console.log(Math.min(...mk[7]))
             <th></th>
             <th></th>
             <th>Percentage</th>
-
             <th>Best Price</th>
             {keyExchangers.map((exchangers) => (
               <th>{exchangers}</th>
@@ -93,14 +98,13 @@ console.log(Math.min(...mk[7]))
                   <>
                     <th rowSpan={2}>{coin}</th>
                     <th>Ask</th>
-                    <th></th>
-                    <th>{Math.min(...mk[keys])}</th>
-
+                    <th rowSpan={2}  className={Math.floor((((Math.min(...mk[keys]))/(Math.max(...mks[keys])))-1)*10000)<0? "green":""}>{Math.floor((((Math.min(...mk[keys]))/(Math.max(...mks[keys])))-1)*10000)}</th>
+                    <th>{Number.parseFloat(Math.min(...mk[keys])).toFixed(5)}</th>
                     {valueCoins.map((ech) => (
                       <th className={ech[coin] && Object.keys(ech[coin]).length !== 0
                         && Number.parseFloat(ech[coin].ask)===Math.min(...mk[keys])?"active":""}>
                         {ech[coin] && Object.keys(ech[coin]).length !== 0
-                          ? Number.parseFloat(ech[coin].ask).toFixed(6)
+                          ? Number.parseFloat(ech[coin].ask).toFixed(5)
                           : "-"}{" "}
                       </th>
                     ))}
@@ -112,14 +116,13 @@ console.log(Math.min(...mk[7]))
                 {
                   <>
                     <th>Bid</th>
-                    <th>dddd</th>
 
-                    <th>{Math.max(...mk[keys])}</th>
+                    <th>{Number.parseFloat(Math.max(...mks[keys])).toFixed(5)}</th>
                     {valueCoins.map((ech) => (
                       <th className={ech[coin] && Object.keys(ech[coin]).length !== 0
-                        && Number.parseFloat(ech[coin].ask)===Math.max(...mk[keys])?"active":""}>
+                        && (Number.parseFloat(ech[coin].bid)===Math.max(...mks[keys]))?"active":""}>
                         {ech[coin] && Object.keys(ech[coin]).length !== 0
-                          ? Number.parseFloat(ech[coin].bid).toFixed(7)
+                          ? Number.parseFloat(ech[coin].bid).toFixed(5)
                           : "-"}{" "}
                       </th>
                     ))}
@@ -135,31 +138,30 @@ console.log(Math.min(...mk[7]))
                   <>
                     <th rowSpan={2}>{coin}</th>
                     <th>Ask</th>
-                    <th></th>
-                    <th>{(Math.min(...mk[key]))*(1+fees[key]/100)}</th>
-
-                    {valueCoins.map((ech,key) => (
-                      <th className={ech[coin] &&(ech[coin].ask)===Math.min(...mk[key])?"active":""}>
+                    <th rowSpan={2} className={Math.floor(((((Math.min(...mk[key]))*(1+fees[key]/100))/((Math.max(...mks[key]))*(1-fees[key]/100)))-1)*10000)<0? "green":""}>
+                      {Math.floor(((((Math.min(...mk[key]))*(1+fees[key]/100))/((Math.max(...mks[key]))*(1-fees[key]/100)))-1)*10000)}</th>
+                    <th>{Number.parseFloat((Math.min(...mk[key]))*(1+fees[key]/100)).toFixed(5)}</th>
+                    {valueCoins.map((ech) => (
+                      <th className={ech[coin] && Object.keys(ech[coin]).length !== 0
+                        && Number.parseFloat((ech[coin].ask)*(1+fees[key]/100))===(Math.min(...mk[key]) *(1+fees[key]/100))?"active":""}>
                         {ech[coin] && Object.keys(ech[coin]).length !== 0
-                          ?Number.parseFloat( ((ech[coin].ask)*(1+fees[key]/100))).toFixed(6)
+                          ? Number.parseFloat((ech[coin].ask)*(1+fees[key]/100)).toFixed(5)
                           : "-"}{" "}
                       </th>
                     ))}
                   </>
                 }{" "}
               </tr>
-
               <tr>
                 {
                   <>
                     <th>Bid</th>
-                    <th></th>
-
-                    <th>{Number.parseFloat((Math.max(...mk[key]))*(1-fees[key]/100)).toFixed(6)}</th>
-                    {valueCoins.map((ech,key) => (
-                      <th className={ech[coin] && (ech[coin].bid)===(Math.max(...mk[key]))*(1-fees[key]/100)?"active":""}>
+                    <th>{Number.parseFloat((Math.max(...mks[key]))*(1-fees[key]/100)).toFixed(5)}</th>
+                    {valueCoins.map((ech) => (
+                      <th className={ech[coin] && Object.keys(ech[coin]).length !== 0
+                        && Number.parseFloat((ech[coin].bid)*(1-fees[key]/100))===(Math.max(...mks[key]) *(1-fees[key]/100))?"active":""}>
                         {ech[coin] && Object.keys(ech[coin]).length !== 0
-                          ?Number.parseFloat((ech[coin].bid)*(1-fees[key]/100)).toFixed(6)
+                          ? Number.parseFloat((ech[coin].bid)*(1-fees[key]/100)).toFixed(5)
                           : "-"}{" "}
                       </th>
                     ))}
@@ -174,5 +176,5 @@ console.log(Math.min(...mk[7]))
       <button onClick={includeFees}>Include Fees</button>
     </div>
   );
-};
+}
 export default Tables;
