@@ -10,7 +10,7 @@
     background-color: #009879;
     color: #ffffff;
     text-align: center;
-    padding: 4px;
+    padding: 3px;
 }
 .container{
     text-align: center;
@@ -19,8 +19,8 @@
     background-color:greenyellow
 }
 button{
-    margin-top: 4px;
-    padding: 10px 30px ;
+    margin-top: 2px;
+    padding: 5px 30px ;
     background-color: #009879;
     color: #ffffff;
     margin: 1px auto;
@@ -33,11 +33,14 @@ button{
 }
 .styled-table th,
 .styled-table td {
-    padding: 7px 15px;
+    padding: 6px 15px;
     border-right: 1px solid #009879;
 }
 .styled-table tbody tr {
     border-bottom: 1px solid #dddddd;
+}
+.head th{
+    padding: 10px 0;
 }
 
 .styled-table tbody tr:nth-of-type(even) {
@@ -59,4 +62,7 @@ button{
     padding-right: 15px;
     margin-left: auto;
     margin-right: auto;
+}
+body{
+    height: 750px;
 }
