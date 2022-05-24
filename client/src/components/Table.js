@@ -4,10 +4,10 @@ import "./table.css";
 const Tables = () => {
   const [loading, setLoading] = useState(false);
   const Coins = ["XRP","LTC","XLM","DOGE","ADA","ALGO","BCH","DGB","BTC","ETH","FIL","SGB"];
-  const fees=[0.2,0.08,0.22,0.1,0.09,0.2,0.07,0.1,0.2,0.2,0.2]
+  const fees=   [0.2,0.08,0.22,0.1,0.09,0.2,0.07,0.1,0.2,0.2,0.2]
   const [valueCoins, setValueOfCoins] = useState([]);
   const [keyExchangers, setkeyExchangers] = useState([]);
-  const [include, setincludeFees] = useState(true);
+  const [include, setincludeFees] = useState(false);
   var i = 0;
   const [exchangers, setExchngers] = useState({
     coinbase: {},okex: {},kraken: {},binance: {},binanceus: {},huobi: {},ftx: {},kucoin: {},
@@ -15,7 +15,7 @@ const Tables = () => {
   });
   useEffect(() => {
     const fetchExchangers = async () => {
-      let res = await axios.get("http://localhost:5000/api/");
+      let res = await axios.get("http://143.198.152.valueCoins.length6:5000/api/");
       setExchngers({
         coinbase: res.data.coinbase.stream,
         okex: res.data.okex.stream,
@@ -40,7 +40,7 @@ const Tables = () => {
 let ask=[]
 let bid=[]
   const includeFees = () => {
-    setincludeFees(false);
+    setincludeFees(true);
   };
 Coins.map((coin) => 
 {
@@ -63,9 +63,9 @@ let mk=[]
 for (var i=0;i<Coins.length;i++)
 {
   mk[i]= (Array(minAsk[i])[0]).split(',').filter(e=>e)
-  mk[i]= mk[i].map(e=>Number(e))
+  mk[i]= mk[i].map(e=>parseFloat(e.trim()))
   mks[i]= (Array(maxBid[i])[0]).split(',').filter(e=>e)
-  mks[i]= mks[i].map(e=>Number(e))
+  mks[i]= mks[i].map(e=>parseFloat(e.trim()))
 }
   return (
     <div className="container">
@@ -85,35 +85,35 @@ for (var i=0;i<Coins.length;i++)
           {
           Coins.map((coin,key) => (
             <>
-              <tr>
+              <tr key={key}>
                 {
                   <>
                     <th rowSpan={2}>{coin}</th>
                     <th>Ask</th>
-                    <th rowSpan={2} className={Math.floor(((((Math.min(...mk[key]))*(include?(1+fees[key]/100):1))/((Math.max(...mks[key]))*(include?(1-fees[key]/100):1)))-1)*10000)<0? "green":""}>
-                      {Math.floor(((((Math.min(...mk[key]))*(include?(1+fees[key]/100):1))/((Math.max(...mks[key]))*(include?(1-fees[key]/100):1)))-1)*10000)!==-10000?Math.floor(((((Math.min(...mk[key]))*(include?(1+fees[key]/100):1))/((Math.max(...mks[key]))*(include?(1-fees[key]/100):1)))-1)*10000):0}</th>
-                    <th>{Number.parseFloat((Math.min(...mk[key]))*(include?(1+fees[key]/100):1)).toFixed(5)}</th>
-                    {valueCoins.map((ech) => (
+                    <th rowSpan={2} className={Math.floor(((((Math.min(...mk[key]))*(include?(1+fees[key!=Coins.length?key:valueCoins.length]/100):1))/((Math.max(...mks[key]))*(include?(1-fees[key]/100):1)))-1)*100)<10000? "green":""}>
+                      {Math.floor(((((Math.min(...mk[key]))*(include?(1+fees[key!=Coins.length?key:valueCoins.length]/100):1))/((Math.max(...mks[key]))*(include?(1-fees[key!=Coins.length?key:valueCoins.length]/100):1)))-1)*10000)!==-10000?Math.floor(((((Math.min(...mk[key]))*(include?(1+fees[key!=Coins.length?key:valueCoins.length]/100):1))/((Math.max(...mks[key]))*(include?(1-fees[key!=Coins.length?key:valueCoins.length]/100):1)))-1)*10000):0}</th>
+                    <th>{Number.parseFloat((Math.min(...mk[key]))*(include?(1+fees[key!=Coins.length?key:valueCoins.length]/100):1)).toFixed(5)}</th>
+                    {valueCoins.map((ech,keys) => (
                       <th className={ech[coin] && Object.keys(ech[coin]).length !== 0
-                        && Number.parseFloat((ech[coin].ask)*(include?(1+fees[key]/100):1))===(Math.min(...mk[key]) *(include?(1+fees[key]/100):1))?"active":""}>
+                        && Number.parseFloat((ech[coin].ask)*(include?(1+fees[keys]/100):1))===(Math.min(...mk[key]) *(include?(1+fees[keys]/100):1))?"active":""}>
                         {ech[coin] && Object.keys(ech[coin]).length !== 0
-                          ? Number.parseFloat((ech[coin].ask)*(include?(1+fees[key]/100):1)).toFixed(5)
-                          : "-"}{" "}
+                          ? parseFloat((ech[coin].ask)*(include?(1+fees[keys]/100):1)).toFixed(5)
+                          : "-"}
                       </th>
                     ))}
                   </>
                 }{" "}
               </tr>
-              <tr>
+              <tr key={Math.random() }>
                 {
                   <>
                     <th>Bid</th>
-                    <th>{Number.parseFloat((Math.max(...mks[key]))*(include?(1-fees[key]/100):1)).toFixed(5)}</th>
-                    {valueCoins.map((ech) => (
+                    <th>{Number.parseFloat((Math.max(...mks[key]))*(include?(1-fees[key!=Coins.length?key:valueCoins.length]/100):1)).toFixed(5)}</th>
+                    {valueCoins.map((ech,keys) => (
                       <th className={ech[coin] && Object.keys(ech[coin]).length !== 0
-                        && Number.parseFloat((ech[coin].bid)*(include?(1-fees[key]/100):1))===(Math.max(...mks[key]) *(include?(1-fees[key]/100):1))?"active":""}>
+                        && Number.parseFloat((ech[coin].bid)*(include?(1-fees[keys]/100):1))===(Math.max(...mks[key]) *(include?(1-fees[keys]/100):1))?"active":""}>
                         {ech[coin] && Object.keys(ech[coin]).length !== 0
-                          ? Number.parseFloat((ech[coin].bid)*(include?(1-fees[key]/100):1)).toFixed(5)
+                          ? Number.parseFloat(((ech[coin].bid))*(include?(1-fees[keys]/100):1)).toFixed(5)
                           : "-"}{" "}
                       </th>
                     ))}
